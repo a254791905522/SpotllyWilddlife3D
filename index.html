@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotlly Wildlife 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(ellipse 80% 55% at 50% -8%, rgba(94, 234, 212, 0.18) 0%, transparent 52%),
+                radial-gradient(ellipse 45% 40% at 0% 85%, rgba(74, 222, 128, 0.14) 0%, transparent 48%),
+                radial-gradient(ellipse 40% 38% at 100% 75%, rgba(34, 120, 80, 0.2) 0%, transparent 45%),
+                linear-gradient(168deg, #0a1410 0%, #142218 42%, #0c1612 100%);
+            color: #c8e6d4;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .canopy {
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 12% 8%, rgba(74, 222, 128, 0.08) 0 2px, transparent 3px),
+                radial-gradient(circle at 88% 15%, rgba(94, 234, 212, 0.06) 0 2px, transparent 3px),
+                radial-gradient(circle at 45% 22%, rgba(52, 211, 153, 0.05) 0 1.5px, transparent 2.5px);
+            background-size: 120px 120px, 160px 160px, 90px 90px;
+            mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 5%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .mist {
+            position: fixed;
+            width: 100%;
+            height: 140px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(0deg, rgba(10, 20, 16, 0.85) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: linear-gradient(158deg, rgba(24, 46, 34, 0.97) 0%, rgba(12, 24, 18, 0.99) 100%);
+            border: 1px solid rgba(74, 222, 128, 0.28);
+            border-radius: 22px;
+            padding: 44px 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow:
+                0 0 0 1px rgba(167, 243, 208, 0.06) inset,
+                0 28px 64px rgba(0, 0, 0, 0.55),
+                0 0 48px rgba(34, 197, 94, 0.08);
+        }
+
+        .icon-wrap {
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #1e3d2c 0%, #142a20 55%, #0c1812 100%);
+            box-shadow:
+                0 12px 32px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(74, 222, 128, 0.15),
+                inset 0 1px 0 rgba(167, 243, 208, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.35);
+        }
+
+        .icon-wrap svg {
+            width: 76px;
+            height: 76px;
+        }
+
+        h1 {
+            font-size: 2.15rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            color: #ecfdf5;
+        }
+
+        h1 span.accent {
+            background: linear-gradient(90deg, #6ee7b7, #5eead4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: #6ee7b7;
+            margin-bottom: 24px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 26px;
+        }
+
+        .chip {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(20, 60, 40, 0.5);
+            color: #a7f3d0;
+            border: 1px solid rgba(74, 222, 128, 0.35);
+        }
+
+        .chip.teal {
+            background: rgba(15, 70, 65, 0.45);
+            color: #99f6e4;
+            border-color: rgba(94, 234, 212, 0.4);
+        }
+
+        .lead {
+            text-align: left;
+            color: #94b8a4;
+            line-height: 1.75;
+            font-size: 1.04rem;
+            margin-bottom: 26px;
+        }
+
+        .lead strong {
+            color: #ecfdf5;
+        }
+
+        .biomes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .biome {
+            padding: 16px 12px;
+            border-radius: 14px;
+            background: rgba(8, 20, 14, 0.88);
+            border: 1px solid rgba(52, 211, 153, 0.22);
+            text-align: center;
+        }
+
+        .biome .emoji {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .biome h3 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6ee7b7;
+            margin-bottom: 6px;
+        }
+
+        .biome p {
+            font-size: 0.78rem;
+            color: #6b9080;
+            line-height: 1.45;
+        }
+
+        .how-to {
+            text-align: left;
+            margin-bottom: 26px;
+            padding: 20px 22px;
+            border-radius: 16px;
+            background: rgba(8, 18, 14, 0.9);
+            border: 1px solid rgba(52, 211, 153, 0.22);
+        }
+
+        .how-to h2 {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #34d399;
+            margin-bottom: 14px;
+        }
+
+        .how-to ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #7a9a88;
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .how-to li {
+            margin-bottom: 8px;
+        }
+
+        .how-to li strong {
+            color: #d1fae5;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            text-align: left;
+            margin-bottom: 26px;
+        }
+
+        .feature-card {
+            background: rgba(6, 14, 10, 0.9);
+            border: 1px solid rgba(45, 120, 85, 0.25);
+            border-radius: 14px;
+            padding: 16px;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(94, 234, 212, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .feature-card h3 {
+            font-size: 0.84rem;
+            color: #5eead4;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            font-size: 0.87rem;
+            color: #6b9080;
+            line-height: 1.55;
+        }
+
+        .cta {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 16px 36px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: #052e16;
+            text-decoration: none;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #6ee7b7 0%, #10b981 100%);
+            box-shadow: 0 8px 28px rgba(16, 185, 129, 0.35);
+            border: 2px solid rgba(167, 243, 208, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px rgba(52, 211, 153, 0.45);
+        }
+
+        .foot {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(45, 120, 85, 0.25);
+            font-size: 0.88rem;
+            color: #5a7a68;
+        }
+
+        .foot a {
+            color: #6ee7b7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .foot a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 560px) {
+            .biomes {
+                grid-template-columns: 1fr;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 32px 22px;
+            }
+            h1 {
+                font-size: 1.65rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="canopy" aria-hidden="true"></div>
+    <div class="mist" aria-hidden="true"></div>
+
+    <div class="container">
+        <div class="icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <ellipse cx="32" cy="52" rx="22" ry="6" fill="#0f2418" opacity="0.8"/>
+                <path d="M18 38 C22 28 28 24 32 22 C36 24 42 28 46 38" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="32" cy="30" r="14" fill="none" stroke="#6ee7b7" stroke-width="2.5"/>
+                <circle cx="32" cy="30" r="6" fill="#142a20" stroke="#5eead4" stroke-width="1.5"/>
+                <path d="M8 28 L14 32 L8 36 Z" fill="#1e3d2c" stroke="#34d399" stroke-width="1"/>
+                <path d="M56 28 L50 32 L56 36 Z" fill="#1e3d2c" stroke="#34d399" stroke-width="1"/>
+                <path d="M26 14 Q32 8 38 14" fill="#22c55e" opacity="0.7"/>
+                <path d="M30 12 Q32 6 34 12" fill="#4ade80" opacity="0.85"/>
+            </svg>
+        </div>
+
+        <h1>Spotlly Wildlife <span class="accent">3D</span></h1>
+        <p class="tagline">Observe · discover · spot</p>
+
+        <div class="chips">
+            <span class="chip">Free</span>
+            <span class="chip">iOS 15+</span>
+            <span class="chip">Hidden object</span>
+            <span class="chip teal">iPhone &amp; iPad</span>
+        </div>
+
+        <p class="lead">
+            <strong>See what hides in plain sight.</strong> Spotlly Wildlife 3D sends you into richly crafted 3D habitats where rare animals blend into moving scenery. Scan each biome, track camouflaged creatures, and sharpen your eye as levels grow denser and wildlife moves in unpredictable patterns.
+        </p>
+
+        <div class="biomes">
+            <div class="biome">
+                <div class="emoji" aria-hidden="true">🌿</div>
+                <h3>Forest</h3>
+                <p>Layered foliage and shifting light hide creatures in the undergrowth.</p>
+            </div>
+            <div class="biome">
+                <div class="emoji" aria-hidden="true">🏜️</div>
+                <h3>Savanna</h3>
+                <p>Open terrain and distant motion test long-range observation.</p>
+            </div>
+            <div class="biome">
+                <div class="emoji" aria-hidden="true">❄️</div>
+                <h3>Alpine</h3>
+                <p>Crisp vistas and subtle silhouettes reward patient scanning.</p>
+            </div>
+        </div>
+
+        <section class="how-to">
+            <h2>How to play</h2>
+            <ol>
+                <li><strong>Enter a habitat</strong> — Explore a 3D scene filled with life-like motion and natural detail.</li>
+                <li><strong>Scan the biome</strong> — Pan and study the environment to catch animals that use camouflage and cover.</li>
+                <li><strong>Spot and identify</strong> — Tap or mark rare species before they slip out of view.</li>
+                <li><strong>Use boosters wisely</strong> — Reveal hidden wildlife, improve visibility, or gain time when a level gets tough.</li>
+            </ol>
+        </section>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Immersive 3D worlds</h3>
+                <p>Traverse dynamic ecosystems built to feel alive, not flat.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Rare wildlife</h3>
+                <p>Each stage focuses on elusive species with distinct behaviors.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Visual challenge</h3>
+                <p>Camouflage, motion, and clutter push your observation skills.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Rising difficulty</h3>
+                <p>Later levels pack more biodiversity and trickier hiding spots.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Field boosters</h3>
+                <p>Power-ups help when detection gets hard—not when you want a free win.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Calm discovery</h3>
+                <p>A mindful search adventure suited to all ages (rated 4+).</p>
+            </div>
+        </div>
+
+        <a href="https://apps.apple.com/us/app/spotlly-wildlife-3d/id6771707948?uo=4" class="cta" target="_blank" rel="noopener noreferrer">Download on the App Store</a>
+
+        <div class="foot">
+            <a href="privacy.html">Privacy overview</a>
+        </div>
+    </div>
+</body>
+
+</html>

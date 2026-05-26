@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy — Spotlly Wildlife 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            background: #0a1410;
+            color: #b8d4c4;
+            line-height: 1.65;
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(10, 20, 16, 0.92);
+            border-bottom: 1px solid rgba(52, 211, 153, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .top-bar a {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6ee7b7;
+            text-decoration: none;
+        }
+
+        .top-bar a:hover {
+            text-decoration: underline;
+        }
+
+        .top-bar span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #5a7a68;
+        }
+
+        .ambient {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 45% at 80% 0%, rgba(94, 234, 212, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 40% at 10% 90%, rgba(74, 222, 128, 0.1) 0%, transparent 48%),
+                linear-gradient(180deg, #0a1410 0%, #0c1814 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shell {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 20px 64px;
+        }
+
+        .title-block {
+            margin-bottom: 32px;
+        }
+
+        .title-block h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ecfdf5;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .title-block .subtitle {
+            font-size: 1.05rem;
+            color: #7a9a88;
+            max-width: 52ch;
+        }
+
+        .glance {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 36px;
+        }
+
+        .glance-item {
+            text-align: center;
+            padding: 20px 14px;
+            border-radius: 16px;
+            background: rgba(14, 32, 24, 0.9);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+
+        .glance-item .value {
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #5eead4;
+            margin-bottom: 6px;
+        }
+
+        .glance-item .label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b9080;
+        }
+
+        .glance-item.highlight {
+            border-color: rgba(110, 231, 183, 0.45);
+            background: linear-gradient(160deg, rgba(20, 50, 36, 0.95), rgba(12, 28, 20, 0.98));
+        }
+
+        .glance-item.highlight .value {
+            color: #6ee7b7;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 540px) {
+            .glance {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .policy-section {
+            margin-bottom: 28px;
+            padding: 24px 22px;
+            border-radius: 18px;
+            background: rgba(10, 22, 16, 0.88);
+            border-left: 4px solid #34d399;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .policy-section:nth-child(even) {
+            border-left-color: #5eead4;
+        }
+
+        .policy-section .num {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #34d399;
+            margin-bottom: 8px;
+        }
+
+        .policy-section h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ecfdf5;
+            margin-bottom: 12px;
+        }
+
+        .policy-section p {
+            font-size: 0.93rem;
+            color: #7a9a88;
+            margin-bottom: 10px;
+        }
+
+        .policy-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .policy-section ul {
+            margin: 8px 0 0 18px;
+            font-size: 0.93rem;
+            color: #7a9a88;
+        }
+
+        .policy-section li {
+            margin-bottom: 6px;
+        }
+
+        .notice {
+            padding: 18px 20px;
+            border-radius: 14px;
+            background: rgba(15, 45, 32, 0.6);
+            border: 1px dashed rgba(94, 234, 212, 0.35);
+            font-size: 0.88rem;
+            color: #6b9080;
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+
+        .store-cta {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .store-cta a {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #052e16;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #6ee7b7 0%, #10b981 100%);
+            border: 1px solid rgba(167, 243, 208, 0.35);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .store-cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(52, 211, 153, 0.35);
+        }
+
+        .updated {
+            text-align: center;
+            font-size: 0.82rem;
+            color: #4a6a58;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <nav class="top-bar">
+        <a href="index.html">← Game overview</a>
+        <span>Privacy</span>
+    </nav>
+
+    <div class="shell">
+        <header class="title-block">
+            <h1>Spotlly Wildlife 3D — Privacy</h1>
+            <p class="subtitle">This page explains how the game handles information. It is written for players and families, not as legal advice.</p>
+        </header>
+
+        <section class="glance" aria-label="Privacy at a glance">
+            <div class="glance-item highlight">
+                <span class="value">Not collected</span>
+                <span class="label">App Store label</span>
+            </div>
+            <div class="glance-item">
+                <span class="value">4+</span>
+                <span class="label">Age rating</span>
+            </div>
+            <div class="glance-item">
+                <span class="value">Ads</span>
+                <span class="label">May appear in-app</span>
+            </div>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 1</div>
+            <h2>What this policy covers</h2>
+            <p>Spotlly Wildlife 3D is a mobile game distributed on the Apple App Store. This overview describes privacy practices for that product only. It does not apply to unrelated websites or services.</p>
+            <p>If anything here differs from the installed app or Apple’s “App Privacy” section on the store listing, treat the store label and on-device behavior as the source of truth.</p>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 2</div>
+            <h2>Data collection summary</h2>
+            <p>According to the App Store privacy label for Spotlly Wildlife 3D, the developer states that <strong style="color:#a7f3d0;">no data is collected</strong> from the app for tracking or linking purposes as defined in that label.</p>
+            <p>Apple may still process download, purchase, and account information under its own policies when you use the App Store. That processing is outside the game’s direct control.</p>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 3</div>
+            <h2>Information on your device</h2>
+            <p>Gameplay progress, settings, and similar session data are typically stored locally in the app sandbox on your iPhone or iPad so you can continue your wildlife expeditions without creating an in-game account.</p>
+            <p>Removing the app from your device, or clearing its data in iOS Settings, deletes that local information from your phone or tablet.</p>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 4</div>
+            <h2>Advertising</h2>
+            <p>The App Store listing indicates that the game may contain advertising. When an ad is shown, the ad network involved may process data under its own privacy rules and Apple’s advertising frameworks.</p>
+            <p>You can review and adjust ad-related options in iOS Settings where your system version and region make them available (for example, privacy controls and content restrictions).</p>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 5</div>
+            <h2>Children and families</h2>
+            <p>The game is rated 4+ on the App Store. Parents and guardians should supervise younger players and use Screen Time or similar tools if they want to limit play time or purchases.</p>
+            <p>We do not knowingly design Spotlly Wildlife 3D to require children to submit personal contact details inside the app for basic play.</p>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 6</div>
+            <h2>Your choices</h2>
+            <ul>
+                <li>Delete the app to remove locally stored game data from your device.</li>
+                <li>Check iOS Settings → Privacy &amp; Security for permissions and tracking options that apply to apps on your device.</li>
+                <li>Read the current App Store “App Privacy” panel after each major update in case practices change.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <div class="num">Section 7</div>
+            <h2>Questions and updates</h2>
+            <p>For product support or privacy questions about Spotlly Wildlife 3D, use the support channel provided on the App Store listing for this title.</p>
+            <p>We may update this page when features or disclosures change. Material changes should also be reflected on the App Store when Apple requires updated privacy information.</p>
+        </section>
+
+        <p class="notice">
+            This page is a plain-language summary for Spotlly Wildlife 3D. It intentionally omits personal developer contact details and third-party homepages. It is not a substitute for professional legal advice.
+        </p>
+
+        <div class="store-cta">
+            <a href="https://apps.apple.com/us/app/spotlly-wildlife-3d/id6771707948?uo=4" target="_blank" rel="noopener noreferrer">View on the App Store</a>
+        </div>
+
+        <p class="updated">Last updated: May 2026 · Spotlly Wildlife 3D</p>
+    </div>
+</body>
+
+</html>
